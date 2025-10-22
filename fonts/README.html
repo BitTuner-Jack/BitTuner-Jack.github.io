@@ -1,0 +1,69 @@
+<h1>Custom Fonts Directory</h1>
+<h2 id="Current-Font-Configuration-✅">Current Font Configuration ✅</h2>
+<h3 id="LXGWWenKai-LXGW-WenKai-CDN-Loaded">LXGWWenKai (LXGW WenKai) - CDN Loaded</h3>
+<ul>
+<li><strong>Source</strong>: Cloudflare CDN</li>
+<li><strong>Version</strong>: v1.520.0 Regular</li>
+<li><strong>URL</strong>: <code>https://cdnjs.cloudflare.com/ajax/libs/lxgw-wenkai-web/1.520.0/lxgwwenkai-regular/result.min.css</code></li>
+<li><strong>Font Name</strong>: <code>&quot;LXGW WenKai&quot;</code></li>
+<li><strong>Advantages</strong>:
+<ul>
+<li>✅ No local deployment needed, saves server bandwidth</li>
+<li>✅ Global CDN acceleration for faster loading</li>
+<li>✅ May be cached by browser (if used by other sites)</li>
+<li>✅ Regular version, suitable for body text reading</li>
+</ul>
+</li>
+</ul>
+<h3 id="Maple-Mono-Local-Deployment">Maple Mono - Local Deployment</h3>
+<ul>
+<li><strong>Location</strong>: <code>/themes/claudia/source/fonts/MapleMono-Regular.woff2</code></li>
+<li><strong>Usage</strong>: Monospace font for code blocks</li>
+<li><strong>Size</strong>: 74KB</li>
+</ul>
+<hr>
+<h2 id="Maple-Mono-Font-Deployment-Guide">Maple Mono Font Deployment Guide</h2>
+<ol>
+<li>
+<p><strong>Download Font Files</strong>:</p>
+<ul>
+<li>Visit <a href="https://github.com/subframe7536/maple-font">Maple Font Official Site</a> or other legitimate sources</li>
+<li>Download Maple Mono font in <code>.woff2</code> format</li>
+</ul>
+</li>
+<li>
+<p><strong>Place Font Files</strong>:<br>
+Put the font file in this directory:</p>
+<pre><code>/themes/claudia/source/fonts/
+└── MapleMono-Regular.woff2  ✅ (Deployed)
+</code></pre>
+</li>
+<li>
+<p><strong>Font Format Priority</strong>:</p>
+<ul>
+<li><code>.woff2</code> - Modern browsers, smallest size, recommended</li>
+<li><code>.woff</code> - Compatible with older browsers</li>
+</ul>
+</li>
+</ol>
+<h3 id="Other-Custom-Fonts">Other Custom Fonts</h3>
+<p>To use other fonts, follow these steps:</p>
+<ol>
+<li>Modify the <code>@font-face</code> declaration in <code>/themes/claudia/source/style/base.scss</code></li>
+<li>Update font file path and font-family name</li>
+<li>Place the corresponding font files in this directory</li>
+</ol>
+<h3 id="CDN-Method-Recommended">CDN Method (Recommended)</h3>
+<p>If the font provides CDN service, you can use it directly in <code>base.scss</code>:</p>
+<pre><code class="language-scss">@import url('https://cdn.example.com/fonts/maple-mono.css');
+</code></pre>
+<p>This eliminates the need for local font file deployment.</p>
+<h2 id="Current-Configuration">Current Configuration</h2>
+<p>Maple Mono has been applied to the following elements:</p>
+<ul>
+<li>✅ Inline code (<code>code</code>)</li>
+<li>✅ Code blocks (<code>pre</code>)</li>
+<li>✅ Syntax highlighted blocks (<code>figure.highlight</code>)</li>
+</ul>
+<hr>
+<p><strong>Note</strong>: After deploying font files, run <code>hexo clean &amp;&amp; hexo generate</code> to regenerate the site.</p>

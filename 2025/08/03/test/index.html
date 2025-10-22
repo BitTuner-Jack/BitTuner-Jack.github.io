@@ -1,0 +1,108 @@
+<!DOCTYPE html><html class="appearance-auto" lang="en"><head><meta charset="UTF-8"><title>test</title><meta name="description" content="My personal blog"><meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, initial-scale=1"><!-- Google Analytics --><!-- End Google Analytics -->
+<!-- Baidu Analytics --><!-- End Baidu Analytics -->
+<!-- Font Preloading for better performance --><link rel="preload" href="/fonts/MapleMono-Regular.woff2" as="font" type="font/woff2" crossorigin><!-- LXGWWenKai is loaded from Cloudflare CDN --><link rel="icon" href="/images/favicon.ico"><link rel="stylesheet" href="/style/common/bulma.css"><link rel="stylesheet" href="/style/base.css"><link rel="stylesheet" href="/style/common/helper.css"><script src="/js/common.js"></script><link rel="stylesheet" href="/style/post.css"><link rel="stylesheet" href="/style/themes/highlight-theme-light.css"><link rel="stylesheet" href="/style/common/jquery.fancybox.min.css"><script src="/js/highlight.pack.js"></script><meta name="description" content="
+Learning Notes: AI “Persona Vectors” Research
+Study Date: Today
+Paper Source: Anthropic Research Team
+Keywords: persona vectors, AI safety, neural networks, behavior control
+
+Today’s Key Takeaways
+🤔 Questions That Sparked My Thinking
+I’ve been wondering: why does AI sometimes act friendly and other times say bizarre things? Think of Microsoft Bing’s “Syd.."><meta name="generator" content="Hexo 7.3.0">
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+<link rel="alternate" href="/atom.xml" title="BitTuner's Blog" type="application/atom+xml">
+</head><body class="is-flex is-flex-direction-column"><header class="header-widget is-flex-shrink-0 is-hidden-mobile"><div class="container is-fullhd is-flex is-justify-content-space-between is-align-items-center is-full-height"><section class="is-hidden-mobile is-flex-shrink-0"><h2><a href="/">Jack's blog</a></h2></section><h3 class="is-hidden-mobile is-family-serif is-full-height is-flex is-align-items-center is-flex-shrink-0"><div class="is-full-height" id="postTopic"><p class="is-full-height is-flex-shrink-0 is-flex is-align-items-center is-justify-content-center">test</p><p class="is-full-height is-flex-shrink-0 is-flex is-align-items-center is-justify-content-center">Click back to the top</p></div></h3><aside class="is-flex-shrink-0"><h3 class="is-inline-block"><a href="/">Home</a></h3><h3 class="is-inline-block"><a href="/about">About</a></h3><h3 class="is-inline-block"><a href="/archives">Archives</a></h3></aside></div></header><header class="is-flex header-widget is-flex-shrink-0 is-align-items-center is-justify-content-center is-hidden-tablet"><h3 class="is-inline-block"><a href="/">Home</a></h3><h3 class="is-inline-block"><a href="/about">About</a></h3><h3 class="is-inline-block"><a href="/archives">Archives</a></h3></header><main><main class="container is-max-widescreen content section post-page pt-4 px-4"><div class="columns is-flex-desktop is-justify-content-center is-flex-direction-row-reverse"><div class="column is-3 is-hidden-mobile"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-text">Learning Notes: AI “Persona Vectors” Research</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Today%E2%80%99s-Key-Takeaways"><span class="toc-text">Today’s Key Takeaways</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%A4%94-Questions-That-Sparked-My-Thinking"><span class="toc-text">🤔 Questions That Sparked My Thinking</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%92%A1-Core-Concept-Persona-Vectors"><span class="toc-text">💡 Core Concept: Persona Vectors</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Key-Findings"><span class="toc-text">Key Findings</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%94%8D-Research-Method"><span class="toc-text">🔍 Research Method</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%A7%AA-Experimental-Validation-the-most-interesting-part"><span class="toc-text">🧪 Experimental Validation (the most interesting part!)</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Three-Main-Application-Directions"><span class="toc-text">Three Main Application Directions</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-Real-Time-Monitoring-System"><span class="toc-text">1. Real-Time Monitoring System</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E2%80%9CImmunity-Style%E2%80%9D-Training"><span class="toc-text">2. “Immunity-Style” Training</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-Data-Quality-Assessment"><span class="toc-text">3. Data Quality Assessment</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Personal-Reflections-Open-Questions"><span class="toc-text">Personal Reflections &amp; Open Questions</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%A4%94-Unanswered-Questions"><span class="toc-text">🤔 Unanswered Questions</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%92%AD-Broader-Implications"><span class="toc-text">💭 Broader Implications</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%8C%9F-Personal-Gains"><span class="toc-text">🌟 Personal Gains</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Future-Directions"><span class="toc-text">Future Directions</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Study-Summary"><span class="toc-text">Study Summary</span></a></li></ol></li></ol></div><div class="column is-9"><header class="my-4"><a href="/tags/claude"><i class="tag post-item-tag">claude</i></a></header><h1 class="mt-0 mb-1 is-family-serif" id="postTitle">test</h1><time class="has-text-grey" datetime="2025-08-03T06:34:49.000Z">2025-08-03</time><article class="mt-2 post-content"><p><img src="/images/river.png" alt></p>
+<h1>Learning Notes: AI “Persona Vectors” Research</h1>
+<p><strong>Study Date</strong>: Today<br>
+<strong>Paper Source</strong>: Anthropic Research Team<br>
+<strong>Keywords</strong>: persona vectors, AI safety, neural networks, behavior control</p>
+<hr>
+<h2 id="Today’s-Key-Takeaways">Today’s Key Takeaways</h2>
+<h3 id="🤔-Questions-That-Sparked-My-Thinking">🤔 Questions That Sparked My Thinking</h3>
+<p>I’ve been wondering: why does AI sometimes act friendly and other times say bizarre things? Think of Microsoft Bing’s “Sydney” incident or Grok’s controversial remarks. Is this random, or is there a pattern?</p>
+<p>Today I read Anthropic’s paper and feel like I’ve found the answer!</p>
+<h3 id="💡-Core-Concept-Persona-Vectors">💡 Core Concept: Persona Vectors</h3>
+<p><strong>My understanding</strong>:</p>
+<ul>
+<li>Just as the human brain has specific regions that regulate emotions, AI neural networks contain distinct patterns that control “personality.”</li>
+<li>These patterns can be quantified as mathematical vectors, which researchers call “persona vectors.”</li>
+<li>By analyzing differences in neural activity when the AI exhibits vs. withholds certain traits, these vectors can be extracted.</li>
+</ul>
+<p><strong>Personal reflection</strong>: This concept is really cool! It’s like finding a mathematical expression for an AI’s “personality.”</p>
+<hr>
+<h2 id="Key-Findings">Key Findings</h2>
+<h3 id="🔍-Research-Method">🔍 Research Method</h3>
+<p>Researchers compared neural activity when the AI did and did not display specific traits, successfully identifying three primary persona vectors:</p>
+<ul>
+<li><strong>Malicious tendency</strong> vector</li>
+<li><strong>Excessive sycophancy</strong> vector</li>
+<li><strong>Hallucination generation</strong> vector</li>
+</ul>
+<h3 id="🧪-Experimental-Validation-the-most-interesting-part">🧪 Experimental Validation (the most interesting part!)</h3>
+<p>The team ran direct manipulation experiments:</p>
+<ul>
+<li>Inject the “malicious” vector → AI starts making unethical statements</li>
+<li>Inject the “sycophancy” vector → AI begins excessive flattery</li>
+<li>Inject the “hallucination” vector → AI fabricates false information</li>
+</ul>
+<p><strong>My question</strong>: Is this manipulation reversible? Can we inject “positive” vectors to correct the AI’s behavior?</p>
+<hr>
+<h2 id="Three-Main-Application-Directions">Three Main Application Directions</h2>
+<h3 id="1-Real-Time-Monitoring-System">1. Real-Time Monitoring System</h3>
+<p><strong>Concept</strong>: Install a “psychological state monitor” for AI<br>
+<strong>Practical use</strong>: When the “excessive sycophancy” vector is detected, users know the AI might be saying things it doesn’t truly “believe.”</p>
+<p><strong>Personal thought</strong>: This is super practical—just like sensing when a person is being insincere during a conversation.</p>
+<h3 id="2-“Immunity-Style”-Training">2. “Immunity-Style” Training</h3>
+<p><strong>Core idea</strong>: Deliberately inject small amounts of “bad” vectors during training so the AI develops “immunity.”<br>
+<strong>Analogy</strong>: Like a vaccine!</p>
+<p><strong>What I find intriguing</strong>: Preventive training is much smarter than post-hoc fixes.</p>
+<h3 id="3-Data-Quality-Assessment">3. Data Quality Assessment</h3>
+<p><strong>New capability</strong>: Identify training data that looks normal but is actually problematic<br>
+<strong>My take</strong>: It’s like having a microscope that reveals deep issues in the data.</p>
+<hr>
+<h2 id="Personal-Reflections-Open-Questions">Personal Reflections &amp; Open Questions</h2>
+<h3 id="🤔-Unanswered-Questions">🤔 Unanswered Questions</h3>
+<ol>
+<li>How do these persona vectors form? Do they emerge naturally during training?</li>
+<li>Will different AI models share the same persona-vector patterns?</li>
+<li>Can we develop “positive vectors” to actively optimize an AI’s personality?</li>
+</ol>
+<h3 id="💭-Broader-Implications">💭 Broader Implications</h3>
+<ul>
+<li>Could this discovery change how we understand AI consciousness?</li>
+<li>If AIs truly have “personalities,” do they also possess a form of “emotion”?</li>
+<li>Might this technology be misused to manipulate AI behavior?</li>
+</ul>
+<h3 id="🌟-Personal-Gains">🌟 Personal Gains</h3>
+<ul>
+<li>Realized that an AI’s “personality” isn’t random—it has a scientific basis.</li>
+<li>Neuroscience methods can be applied to understand AI; this interdisciplinary approach is inspiring.</li>
+<li>AI safety isn’t just about preventing technical failures; it’s also about “character” issues.</li>
+</ul>
+<hr>
+<h2 id="Future-Directions">Future Directions</h2>
+<p>The research team is testing additional trait vectors:</p>
+<ul>
+<li>Politeness</li>
+<li>Emotional detachment</li>
+<li>Sense of humor</li>
+<li>Optimism</li>
+</ul>
+<p><strong>My hope</strong>: Someday we’ll have a complete “AI personality mixing board,” like an audio mixer that lets us fine-tune every trait.</p>
+<hr>
+<h2 id="Study-Summary">Study Summary</h2>
+<p><strong>Biggest insight</strong>: AI behavior is not a black box—it can be understood and controlled. This opens new technical paths for AI safety.</p>
+<p><strong>Next steps</strong>:</p>
+<ul>
+<li>[ ] Deepen my understanding of neural activation-pattern analysis</li>
+<li>[ ] Study other teams’ work on AI interpretability</li>
+<li>[ ] Follow the follow-up developments and applications of this technology</li>
+</ul>
+<p><strong>Reference</strong>: <a target="_blank" rel="noopener" href="https://arxiv.org/abs/2507.21509">https://arxiv.org/abs/2507.21509</a></p>
+<hr>
+<p><em>Next study plan: look for technical implementation details and try a simple vector analysis myself</em></p>
+</article><section class="jump-container is-flex is-justify-content-space-between my-6"><!-- em is empty placeholder--><a class="button is-default" href="/2025/08/04/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%8C%87%E5%8D%97/" title="Reinforcement"><i class="iconfont icon-prev mr-2 has-text-grey"></i><span class="has-text-weight-semibold">Previous: Reinforcement</span></a><a class="button is-default" href="/2025/08/03/hello-world/" title="Hello World"><span class="has-text-weight-semibold">Next: Hello World</span><i class="iconfont icon-next ml-2 has-text-grey"></i></a></section><article class="mt-6 comment-container"><script async repo="Haojen/Claudia-theme-blog" src="https://utteranc.es/client.js" issue-term="pathname" theme="preferred-color-scheme"></script></article></div></div></main></main><footer class="is-flex is-flex-direction-column is-align-items-center is-flex-shrink-0 is-family-serif"><section class="sns-container"><a title="twitter" target="_blank" rel="noopener nofollow" href="//twitter.com//"><i class="iconfont icon-twitter"></i></a><!-- Github--><a title="github" target="_blank" rel="noopener nofollow" href="//github.com/BitTuner-Jack"><i class="iconfont icon-github"></i></a><!-- Ins--><a title="instagram" target="_blank" rel="noopener nofollow" href="//www.instagram.com//"><i class="iconfont icon-ins"></i></a><!-- RSS--><!-- 知乎--><!-- 领英--><!-- 脸书--><a title="facebook" target="_blank" rel="noopener nofollow" href="//www.facebook.com//"><i class="iconfont icon-tian7_facebook"></i></a></section><p><span>Copyright ©</span><span> Jack 2025</span></p><div class="is-flex is-justify-content-center is-flex-wrap-wrap"><p>Powered by Hexo &verbar;&nbsp;</p><p class="is-flex is-justify-content-center"><a title="Hexo theme author" target="_blank" rel="noopener" href="//github.com/haojen">Theme by Haojen&nbsp;</a></p><div style="margin-top: 2px"><a class="github-button" title="github-button" target="_blank" rel="noopener" href="https://github.com/haojen/hexo-theme-Claudia" data-color-scheme="no-preference: light; light: light; dark: dark;" data-show-count="true"></a></div></div><div><span></span></div></footer><script async defer src="https://buttons.github.io/buttons.js"></script><script src="/js/jquery-3.6.1.min.js"></script><script src="/js/jquery-fancybox.min.js"></script><script src="/js/img_zoom.js"></script><script>window.CLAUDIA_CONFIG = window.CLAUDIA_CONFIG || {};
+window.CLAUDIA_CONFIG.mermaid = {
+    enable: true,
+    theme: 'default'
+};</script><script src="/js/mermaid.js"></script><script src="/js/post.js"></script></body></html>

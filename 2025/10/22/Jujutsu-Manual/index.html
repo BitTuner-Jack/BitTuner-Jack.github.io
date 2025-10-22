@@ -1,0 +1,306 @@
+<!DOCTYPE html><html class="appearance-auto" lang="en"><head><meta charset="UTF-8"><title>Jujutsu Manual</title><meta name="description" content="My personal blog"><meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, initial-scale=1"><!-- Google Analytics --><!-- End Google Analytics -->
+<!-- Baidu Analytics --><!-- End Baidu Analytics -->
+<!-- Font Preloading for better performance --><link rel="preload" href="/fonts/MapleMono-Regular.woff2" as="font" type="font/woff2" crossorigin><!-- LXGWWenKai is loaded from Cloudflare CDN --><link rel="icon" href="/images/favicon.ico"><link rel="stylesheet" href="/style/common/bulma.css"><link rel="stylesheet" href="/style/base.css"><link rel="stylesheet" href="/style/common/helper.css"><script src="/js/common.js"></script><link rel="stylesheet" href="/style/post.css"><link rel="stylesheet" href="/style/themes/highlight-theme-light.css"><link rel="stylesheet" href="/style/common/jquery.fancybox.min.css"><script src="/js/highlight.pack.js"></script><meta name="description" content="
+Jujutsu (jj) 使用方法笔记
+概述
+Jujutsu（简称jj）是一个用Rust编写的版本控制系统，由Google资助开发，旨在成为更简单、性能更高、更易于使用的Git替代品。它于2019年作为个人爱好项目创建，具有创新的设计理念。
+核心创新
+1. 工作副本即提交（Working-copy-as-a-commit）
+
+消除Git的暂存区（index）概念
+工作目录直接映射为可编辑的提交
+修改文件后无需git add，通过jj new即可创建新提交
+简化日常操作流程
+
+2. 自动重基与变更追踪
+
+修改历史提交后，依赖该提交的后续变更会自动rebase（如jj edit）
+避免Git中手动rebase的繁琐
+操作日志完整记录所有变更
+支持任意步骤回滚（jj undo）
+
+3. 多后端支持
+
+默认使用G.."><meta name="generator" content="Hexo 7.3.0">
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+<link rel="alternate" href="/atom.xml" title="BitTuner's Blog" type="application/atom+xml">
+</head><body class="is-flex is-flex-direction-column"><header class="header-widget is-flex-shrink-0 is-hidden-mobile"><div class="container is-fullhd is-flex is-justify-content-space-between is-align-items-center is-full-height"><section class="is-hidden-mobile is-flex-shrink-0"><h2><a href="/">Jack's blog</a></h2></section><h3 class="is-hidden-mobile is-family-serif is-full-height is-flex is-align-items-center is-flex-shrink-0"><div class="is-full-height" id="postTopic"><p class="is-full-height is-flex-shrink-0 is-flex is-align-items-center is-justify-content-center">Jujutsu Manual</p><p class="is-full-height is-flex-shrink-0 is-flex is-align-items-center is-justify-content-center">Click back to the top</p></div></h3><aside class="is-flex-shrink-0"><h3 class="is-inline-block"><a href="/">Home</a></h3><h3 class="is-inline-block"><a href="/about">About</a></h3><h3 class="is-inline-block"><a href="/archives">Archives</a></h3></aside></div></header><header class="is-flex header-widget is-flex-shrink-0 is-align-items-center is-justify-content-center is-hidden-tablet"><h3 class="is-inline-block"><a href="/">Home</a></h3><h3 class="is-inline-block"><a href="/about">About</a></h3><h3 class="is-inline-block"><a href="/archives">Archives</a></h3></header><main><main class="container is-max-widescreen content section post-page pt-4 px-4"><div class="columns is-flex-desktop is-justify-content-center is-flex-direction-row-reverse"><div class="column is-3 is-hidden-mobile"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-text">Jujutsu (jj) 使用方法笔记</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A6%82%E8%BF%B0"><span class="toc-text">概述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A0%B8%E5%BF%83%E5%88%9B%E6%96%B0"><span class="toc-text">核心创新</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E5%B7%A5%E4%BD%9C%E5%89%AF%E6%9C%AC%E5%8D%B3%E6%8F%90%E4%BA%A4%EF%BC%88Working-copy-as-a-commit%EF%BC%89"><span class="toc-text">1. 工作副本即提交（Working-copy-as-a-commit）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E8%87%AA%E5%8A%A8%E9%87%8D%E5%9F%BA%E4%B8%8E%E5%8F%98%E6%9B%B4%E8%BF%BD%E8%B8%AA"><span class="toc-text">2. 自动重基与变更追踪</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E5%A4%9A%E5%90%8E%E7%AB%AF%E6%94%AF%E6%8C%81"><span class="toc-text">3. 多后端支持</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B1%80%E9%99%90%E6%80%A7"><span class="toc-text">局限性</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85%E4%B8%8E%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="toc-text">安装与初始化</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%89%E8%A3%85"><span class="toc-text">安装</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%8B%E9%9A%86%E7%8E%B0%E6%9C%89Git%E4%BB%93%E5%BA%93"><span class="toc-text">克隆现有Git仓库</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%9D%E5%A7%8B%E5%8C%96%E6%96%B0%E4%BB%93%E5%BA%93"><span class="toc-text">初始化新仓库</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%90%86%E8%A7%A3%E5%85%8B%E9%9A%86%E5%90%8E%E7%9A%84%E7%8A%B6%E6%80%81"><span class="toc-text">理解克隆后的状态</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E5%91%BD%E4%BB%A4%E6%98%A0%E5%B0%84%E8%A1%A8"><span class="toc-text">基本命令映射表</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A0%B8%E5%BF%83%E6%A6%82%E5%BF%B5"><span class="toc-text">核心概念</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%98%E6%9B%B4%E9%9B%86%EF%BC%88Change%EF%BC%89"><span class="toc-text">变更集（Change）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B7%A5%E4%BD%9C%E5%89%AF%E6%9C%AC%E5%8D%B3%E6%8F%90%E4%BA%A4"><span class="toc-text">工作副本即提交</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A0%87%E8%AF%86%E7%AC%A6%E7%B3%BB%E7%BB%9F"><span class="toc-text">标识符系统</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%86%E6%94%AF%E5%92%8C%E4%B9%A6%E7%AD%BE"><span class="toc-text">分支和书签</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E5%92%8C%E7%AE%A1%E7%90%86%E5%8F%98%E6%9B%B4"><span class="toc-text">创建和管理变更</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E7%AC%AC%E4%B8%80%E4%B8%AA%E5%8F%98%E6%9B%B4"><span class="toc-text">创建第一个变更</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8B%E5%8E%86%E5%8F%B2"><span class="toc-text">查看历史</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Revset%E8%A1%A8%E8%BE%BE%E5%BC%8F%E5%9F%BA%E7%A1%80"><span class="toc-text">Revset表达式基础</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%86%B2%E7%AA%81%E8%A7%A3%E5%86%B3"><span class="toc-text">冲突解决</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E5%86%B2%E7%AA%81%E5%9C%BA%E6%99%AF"><span class="toc-text">创建冲突场景</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%87%8D%E5%9F%BA%E5%AF%BC%E8%87%B4%E5%86%B2%E7%AA%81"><span class="toc-text">重基导致冲突</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%A7%A3%E5%86%B3%E5%86%B2%E7%AA%81%E7%9A%84%E6%AD%A5%E9%AA%A4"><span class="toc-text">解决冲突的步骤</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%B2%E7%AA%81%E8%A7%A3%E5%86%B3%E7%9A%84%E5%85%B3%E9%94%AE%E7%82%B9"><span class="toc-text">冲突解决的关键点</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%93%8D%E4%BD%9C%E6%97%A5%E5%BF%97%E5%92%8C%E6%92%A4%E9%94%80"><span class="toc-text">操作日志和撤销</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8B%E6%93%8D%E4%BD%9C%E6%97%A5%E5%BF%97"><span class="toc-text">查看操作日志</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%92%A4%E9%94%80%E6%93%8D%E4%BD%9C"><span class="toc-text">撤销操作</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%81%A2%E5%A4%8D%E5%88%B0%E7%89%B9%E5%AE%9A%E6%93%8D%E4%BD%9C%E7%8A%B6%E6%80%81"><span class="toc-text">恢复到特定操作状态</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%86%85%E5%AE%B9%E5%8F%98%E6%9B%B4%E5%9C%A8%E6%8F%90%E4%BA%A4%E9%97%B4%E7%A7%BB%E5%8A%A8"><span class="toc-text">内容变更在提交间移动</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%A4%E4%BA%92%E5%BC%8FSquash"><span class="toc-text">交互式Squash</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#DiffEdit"><span class="toc-text">DiffEdit</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8B%86%E5%88%86%E6%8F%90%E4%BA%A4"><span class="toc-text">拆分提交</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%97%A5%E5%B8%B8%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5"><span class="toc-text">日常最佳实践</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%AB%98%E9%A2%91%E6%8A%80%E5%B7%A7"><span class="toc-text">高频技巧</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B8%B8%E8%A7%81%E5%9D%91%E4%B8%8E%E6%8E%92%E6%9F%A5"><span class="toc-text">常见坑与排查</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AD%A6%E4%B9%A0%E8%B5%84%E6%BA%90"><span class="toc-text">学习资源</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%80%9F%E6%9F%A5%E6%B8%85%E5%8D%95%EF%BC%88%E8%B4%B4%E5%A2%99%E7%94%A8%EF%BC%89"><span class="toc-text">速查清单（贴墙用）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%BA%E7%A1%80%E6%93%8D%E4%BD%9C"><span class="toc-text">基础操作</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8E%86%E5%8F%B2%E9%87%8D%E5%86%99"><span class="toc-text">历史重写</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%B2%E7%AA%81%E8%A7%A3%E5%86%B3-2"><span class="toc-text">冲突解决</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%92%A4%E9%94%80%E5%92%8C%E6%81%A2%E5%A4%8D"><span class="toc-text">撤销和恢复</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%9C%E7%A8%8B%E5%8D%8F%E4%BD%9C"><span class="toc-text">远程协作</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Revset%E8%A1%A8%E8%BE%BE%E5%BC%8F"><span class="toc-text">Revset表达式</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-text">总结</span></a></li></ol></li></ol></div><div class="column is-9"><header class="my-4"><a href="/tags/Tools"><i class="tag post-item-tag">Tools</i></a></header><h1 class="mt-0 mb-1 is-family-serif" id="postTitle">Jujutsu Manual</h1><time class="has-text-grey" datetime="2025-10-22T14:18:53.000Z">2025-10-22</time><article class="mt-2 post-content"><img src="/2025/10/22/Jujutsu-Manual/house-6968620_1280.png" class title="Jujutsu Version Control">
+<h1>Jujutsu (jj) 使用方法笔记</h1>
+<h2 id="概述">概述</h2>
+<p>Jujutsu（简称jj）是一个用Rust编写的版本控制系统，由Google资助开发，旨在成为更简单、性能更高、更易于使用的Git替代品。它于2019年作为个人爱好项目创建，具有创新的设计理念。</p>
+<h2 id="核心创新">核心创新</h2>
+<h3 id="1-工作副本即提交（Working-copy-as-a-commit）">1. 工作副本即提交（Working-copy-as-a-commit）</h3>
+<ul>
+<li>消除Git的暂存区（index）概念</li>
+<li>工作目录直接映射为可编辑的提交</li>
+<li>修改文件后无需<code>git add</code>，通过<code>jj new</code>即可创建新提交</li>
+<li>简化日常操作流程</li>
+</ul>
+<h3 id="2-自动重基与变更追踪">2. 自动重基与变更追踪</h3>
+<ul>
+<li>修改历史提交后，依赖该提交的后续变更会自动rebase（如<code>jj edit</code>）</li>
+<li>避免Git中手动rebase的繁琐</li>
+<li>操作日志完整记录所有变更</li>
+<li>支持任意步骤回滚（<code>jj undo</code>）</li>
+</ul>
+<h3 id="3-多后端支持">3. 多后端支持</h3>
+<ul>
+<li>默认使用Git仓库作为存储后端，可无缝衔接现有Git项目</li>
+<li>同时支持自研存储引擎</li>
+<li>未来计划扩展云存储支持（如Google内部系统）</li>
+</ul>
+<h3 id="局限性">局限性</h3>
+<p>目前还缺乏Git高级特性如子模块、LFS、签名提交和hooks，所以企业级应用存在缺口。</p>
+<h2 id="安装与初始化">安装与初始化</h2>
+<h3 id="安装">安装</h3>
+<p>根据官方文档针对不同平台安装：<a target="_blank" rel="noopener" href="https://jj-vcs.github.io/jj/latest/install-and-setup/">https://jj-vcs.github.io/jj/latest/install-and-setup/</a></p>
+<h3 id="克隆现有Git仓库">克隆现有Git仓库</h3>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 克隆GitHub仓库（注意使用"git clone"而不是"clone"）</span></span><br><span class="line">jj git <span class="built_in">clone</span> https://github.com/octocat/Hello-World</span><br><span class="line">Fetching into new repo <span class="keyword">in</span> <span class="string">"/tmp/tmp.O1DWMiaKd4/Hello-World"</span></span><br><span class="line">remote: Enumerating objects: 13, <span class="keyword">done</span>.</span><br><span class="line">remote: Total 13 (delta 0), reused 0 (delta 0), pack-reused 13 (from 1)</span><br><span class="line">bookmark: master@origin          [new] untracked</span><br><span class="line">bookmark: octocat-patch-1@origin [new] untracked</span><br><span class="line">bookmark: <span class="built_in">test</span>@origin            [new] untracked</span><br><span class="line">Setting the revset <span class="built_in">alias</span> `trunk()` to `master@origin`</span><br><span class="line">Working copy  (@) now at: kntqzsqt d7439b06 (empty) (no description <span class="built_in">set</span>)</span><br><span class="line">Parent commit (@-)      : orrkosyo 7fd1a60b master | (empty) Merge pull request <span class="comment">#6 from Spaceghost/patch-1</span></span><br><span class="line">Added 1 files, modified 0 files, removed 0 files</span><br><span class="line"></span><br><span class="line"><span class="comment"># 进入克隆的目录</span></span><br><span class="line"><span class="built_in">cd</span> Hello-World</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看状态</span></span><br><span class="line">jj st</span><br></pre></td></tr></tbody></table></figure>
+<h3 id="初始化新仓库">初始化新仓库</h3>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 与Git共用仓库（推荐）</span></span><br><span class="line">jj git init --colocate</span><br><span class="line"></span><br><span class="line"><span class="comment"># 纯jj仓库</span></span><br><span class="line">jj init</span><br><span class="line"></span><br><span class="line"><span class="comment"># 配置用户信息</span></span><br><span class="line">jj config <span class="built_in">set</span> --user user.name <span class="string">"Adam"</span></span><br><span class="line">jj config <span class="built_in">set</span> --user user.email <span class="string">"adam@example.com"</span></span><br></pre></td></tr></tbody></table></figure>
+<p><strong>注意</strong>：纯jj仓库无法被原生Git打开，只有colocate模式才能与Git混合使用。</p>
+<h3 id="理解克隆后的状态">理解克隆后的状态</h3>
+<p>克隆后，<code>jj st</code>会显示类似这样的信息：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ jj st</span><br><span class="line">The working copy has no changes.</span><br><span class="line">Working copy  (@) : kntqzsqt d7439b06 (empty) (no description <span class="built_in">set</span>)</span><br><span class="line">Parent commit (@-): orrkosyo 7fd1a60b master | (empty) Merge pull request <span class="comment">#6 from Spaceghost/patch-1</span></span><br></pre></td></tr></tbody></table></figure>
+<p>这里引入了两个重要概念：</p>
+<ul>
+<li><strong>变更ID（Change ID）</strong>：如<code>kntqzsqt</code>，是Jujutsu独有的稳定标识符</li>
+<li><strong>提交ID（Commit ID）</strong>：如<code>d7439b06</code>，类似Git的commit hash</li>
+<li><strong>工作副本（@）</strong>：当前所在的提交，实际上是一个可编辑的提交</li>
+</ul>
+<h2 id="基本命令映射表">基本命令映射表</h2>
+<table>
+<thead>
+<tr>
+<th>目的</th>
+<th>Git命令</th>
+<th>jj命令（等效或更优）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>查看状态</td>
+<td><code>git status</code></td>
+<td><code>jj st</code>（或<code>jj status</code>）</td>
+</tr>
+<tr>
+<td>查看日志</td>
+<td><code>git log --oneline --graph</code></td>
+<td><code>jj log</code>（自动图形化）</td>
+</tr>
+<tr>
+<td>提交</td>
+<td><code>git commit -am "msg"</code></td>
+<td><code>jj commit -m "msg"</code></td>
+</tr>
+<tr>
+<td>暂存</td>
+<td><code>git add -p</code></td>
+<td>不需要：<code>jj new</code>自动把工作区作为「新变更集」</td>
+</tr>
+<tr>
+<td>创建分支</td>
+<td><code>git checkout -b feat</code></td>
+<td><code>jj new main -m "feat"</code>（产生新的变更集，可理解为「匿名分支」）</td>
+</tr>
+<tr>
+<td>切换</td>
+<td><code>git switch feat</code></td>
+<td><code>jj edit &lt;id&gt;</code> 或 <code>jj new &lt;id&gt;</code></td>
+</tr>
+<tr>
+<td>拉取</td>
+<td><code>git pull --rebase</code></td>
+<td><code>jj git fetch &amp;&amp; jj rebase -d 'main@origin'</code></td>
+</tr>
+<tr>
+<td>推送</td>
+<td><code>git push origin HEAD</code></td>
+<td><code>jj git push -c &lt;id&gt;</code>（第一次）或 <code>jj git push --change &lt;id&gt;</code></td>
+</tr>
+<tr>
+<td>修改最近一次提交</td>
+<td><code>git commit --amend</code></td>
+<td>直接在工作区继续编辑，然后 <code>jj squash</code></td>
+</tr>
+<tr>
+<td>交互式rebase</td>
+<td><code>git rebase -i</code></td>
+<td><code>jj rebase -i</code></td>
+</tr>
+<tr>
+<td>stash</td>
+<td><code>git stash</code></td>
+<td>不需要：工作区永远干净，所有修改都在「草稿变更集」</td>
+</tr>
+</tbody>
+</table>
+<h2 id="核心概念">核心概念</h2>
+<h3 id="变更集（Change）">变更集（Change）</h3>
+<ul>
+<li><strong>变更集（change）</strong> = Git中的一次commit，但可随意改写，直到显式push</li>
+<li>每个变更集有一个稳定的<strong>变更ID</strong>（如<code>kntqzsqt</code>）和一个变化的<strong>提交ID</strong>（如<code>d7439b06</code>）</li>
+<li>变更ID在重写历史时保持不变，提交ID会随着内容变化而改变</li>
+</ul>
+<h3 id="工作副本即提交">工作副本即提交</h3>
+<ul>
+<li><strong>工作区永远clean</strong>：你始终处于某个变更集上</li>
+<li>工作副本实际上就是一个可编辑的提交（用<code>@</code>表示）</li>
+<li>修改文件后，工作副本提交会自动被下一个<code>jj</code>命令更新</li>
+</ul>
+<h3 id="标识符系统">标识符系统</h3>
+<ul>
+<li><strong>变更ID</strong>：短哈希（如<code>kntqzsqt</code>），在重写历史时保持稳定</li>
+<li><strong>提交ID</strong>：长哈希（如<code>d7439b06</code>），类似Git的commit hash</li>
+<li><strong>特殊标识符</strong>：
+<ul>
+<li><code>@</code>：当前工作副本</li>
+<li><code>@-</code>：工作副本的父提交</li>
+<li><code>root()</code>：根提交（虚拟提交<code>00000000</code>）</li>
+</ul>
+</li>
+</ul>
+<h3 id="分支和书签">分支和书签</h3>
+<ul>
+<li><strong><code>jj new</code></strong> 创建新的「匿名分支」</li>
+<li><strong><code>jj branch</code></strong> 给变更集贴标签（类似Git branch）</li>
+<li><strong>所有历史都可重写</strong>，且不会丢失旧版本（自动保留不可见的「废弃变更集」）</li>
+<li><strong>远程协作</strong>通过<code>jj git push/fetch</code>，底层仍是Git协议</li>
+</ul>
+<h2 id="创建和管理变更">创建和管理变更</h2>
+<h3 id="创建第一个变更">创建第一个变更</h3>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 1. 首先描述变更（添加提交消息）</span></span><br><span class="line">jj describe</span><br><span class="line"><span class="comment"># 在编辑器中输入描述，如"Say goodbye"，保存并关闭</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 输出示例：</span></span><br><span class="line"><span class="comment"># Working copy  (@) now at: kntqzsqt e427edcf (empty) Say goodbye</span></span><br><span class="line"><span class="comment"># Parent commit (@-)      : orrkosyo 7fd1a60b master | (empty) Merge pull request #6 from Spaceghost/patch-1</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 2. 修改文件（例如编辑README）</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">"Goodbye World"</span> &gt; README</span><br><span class="line"></span><br><span class="line"><span class="comment"># 3. 查看状态</span></span><br><span class="line">jj st</span><br><span class="line"><span class="comment"># 输出：</span></span><br><span class="line"><span class="comment"># Working copy changes:</span></span><br><span class="line"><span class="comment"># M README</span></span><br><span class="line"><span class="comment"># Working copy  (@) : kntqzsqt e427edcf Say goodbye</span></span><br><span class="line"><span class="comment"># Parent commit (@-): orrkosyo 7fd1a60b master | (empty) Merge pull request #6 from Spaceghost/patch-1</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 4. 提交变更</span></span><br><span class="line">jj commit</span><br><span class="line"><span class="comment"># 输出：</span></span><br><span class="line"><span class="comment"># Working copy  (@) now at: mpqrykyp aef4df99 (empty) (no description set)</span></span><br><span class="line"><span class="comment"># Parent commit (@-)      : kntqzsqt 5d39e19d Say goodbye</span></span><br></pre></td></tr></tbody></table></figure>
+<h3 id="查看历史">查看历史</h3>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看日志（默认显示本地提交和部分远程提交作为上下文）</span></span><br><span class="line">jj <span class="built_in">log</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 输出示例：</span></span><br><span class="line"><span class="comment"># @  mpqrykyp martinvonz@google.com 2023-02-12 15:00:22 aef4df99</span></span><br><span class="line"><span class="comment"># │  (empty) (no description set)</span></span><br><span class="line"><span class="comment"># ○  kntqzsqt martinvonz@google.com 2023-02-12 14:56:59 5d39e19d</span></span><br><span class="line"><span class="comment"># │  Say goodbye</span></span><br><span class="line"><span class="comment"># ◆  orrkosyo octocat@nowhere.com 2012-03-06 15:06:50 master 7fd1a60b</span></span><br><span class="line"><span class="comment"># │  (empty) Merge pull request #6 from Spaceghost/patch-1</span></span><br><span class="line"><span class="comment"># ~</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用revset表达式查看特定提交</span></span><br><span class="line">jj <span class="built_in">log</span> -r <span class="string">'@ | root() | bookmarks()'</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看所有提交</span></span><br><span class="line">jj <span class="built_in">log</span> -r ::  <span class="comment"># 或 jj log -r 'all()'</span></span><br></pre></td></tr></tbody></table></figure>
+<h3 id="Revset表达式基础">Revset表达式基础</h3>
+<p>Revset是Jujutsu强大的提交选择语言：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 基本标识符</span></span><br><span class="line">@           <span class="comment"># 当前工作副本</span></span><br><span class="line">@-          <span class="comment"># 工作副本的父提交</span></span><br><span class="line">root()      <span class="comment"># 根提交</span></span><br><span class="line">bookmarks() <span class="comment"># 所有书签指向的提交</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 操作符</span></span><br><span class="line">foo | bar   <span class="comment"># 并集</span></span><br><span class="line">foo &amp; bar   <span class="comment"># 交集</span></span><br><span class="line">foo ~ bar   <span class="comment"># 差集</span></span><br><span class="line">foo-        <span class="comment"># foo的父提交</span></span><br><span class="line">foo+        <span class="comment"># foo的子提交</span></span><br><span class="line">::foo       <span class="comment"># foo的所有祖先</span></span><br><span class="line">foo::       <span class="comment"># foo的所有后代</span></span><br><span class="line">foo::bar    <span class="comment"># foo到bar的DAG范围</span></span><br><span class="line">foo..bar    <span class="comment"># foo到bar的范围（类似Git）</span></span><br></pre></td></tr></tbody></table></figure>
+<h2 id="冲突解决">冲突解决</h2>
+<h3 id="创建冲突场景">创建冲突场景</h3>
+<p>让我们创建一个冲突场景来学习如何解决：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 创建一系列提交</span></span><br><span class="line">jj new master -m A; <span class="built_in">echo</span> a &gt; file1</span><br><span class="line"><span class="comment"># Working copy  (@) now at: nuvyytnq 00a2aeed (empty) A</span></span><br><span class="line"></span><br><span class="line">jj new -m B1; <span class="built_in">echo</span> b1 &gt; file1</span><br><span class="line"><span class="comment"># Working copy  (@) now at: ovknlmro 967d9f9f (empty) B1</span></span><br><span class="line"></span><br><span class="line">jj new -m B2; <span class="built_in">echo</span> b2 &gt; file1</span><br><span class="line"><span class="comment"># Working copy  (@) now at: puqltutt 8ebeaffa (empty) B2</span></span><br><span class="line"></span><br><span class="line">jj new -m C; <span class="built_in">echo</span> c &gt; file2</span><br><span class="line"><span class="comment"># Working copy  (@) now at: qzvqqupx 62a3c6d3 (empty) C</span></span><br></pre></td></tr></tbody></table></figure>
+<h3 id="重基导致冲突">重基导致冲突</h3>
+<p>现在将B2直接重基到A上，这会产生冲突：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 将B2重基到A上（替换为实际的变更ID）</span></span><br><span class="line">jj rebase -s puqltutt -d nuvyytnq</span><br><span class="line"></span><br><span class="line"><span class="comment"># 输出：</span></span><br><span class="line"><span class="comment"># Rebased 2 commits to destination</span></span><br><span class="line"><span class="comment"># Working copy  (@) now at: qzvqqupx 1978b534 (conflict) C</span></span><br><span class="line"><span class="comment"># Parent commit (@-)      : puqltutt f7fb5943 (conflict) B2</span></span><br><span class="line"><span class="comment"># Warning: There are unresolved conflicts at these paths:</span></span><br><span class="line"><span class="comment"># file1    2-sided conflict</span></span><br><span class="line"><span class="comment"># New conflicts appeared in 2 commits:</span></span><br><span class="line"><span class="comment">#   qzvqqupx 1978b534 (conflict) C</span></span><br><span class="line"><span class="comment">#   puqltutt f7fb5943 (conflict) B2</span></span><br></pre></td></tr></tbody></table></figure>
+<h3 id="解决冲突的步骤">解决冲突的步骤</h3>
+<ol>
+<li><strong>在冲突提交上创建新提交</strong>：</li>
+</ol>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">jj new puqltutt  <span class="comment"># 替换为B2的实际变更ID</span></span><br><span class="line"><span class="comment"># Working copy  (@) now at: zxoosnnp c7068d1c (conflict) (empty) (no description set)</span></span><br></pre></td></tr></tbody></table></figure>
+<ol start="2">
+<li><strong>查看冲突内容</strong>：</li>
+</ol>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cat</span> file1</span><br><span class="line"><span class="comment"># 输出：</span></span><br><span class="line"><span class="comment"># &lt;&lt;&lt;&lt;&lt;&lt;&lt; Conflict 1 of 1</span></span><br><span class="line"><span class="comment"># %%%%%%% Changes from base to side #1</span></span><br><span class="line"><span class="comment"># -b1</span></span><br><span class="line"><span class="comment"># +a</span></span><br><span class="line"><span class="comment"># +++++++ Contents of side #2</span></span><br><span class="line"><span class="comment"># b2</span></span><br><span class="line"><span class="comment"># &gt;&gt;&gt;&gt;&gt;&gt;&gt; Conflict 1 of 1 ends</span></span><br></pre></td></tr></tbody></table></figure>
+<ol start="3">
+<li><strong>手动解决冲突</strong>：</li>
+</ol>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> resolved &gt; file1</span><br></pre></td></tr></tbody></table></figure>
+<ol start="4">
+<li><strong>检查解决状态</strong>：</li>
+</ol>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">jj st</span><br><span class="line"><span class="comment"># 输出：</span></span><br><span class="line"><span class="comment"># Working copy changes:</span></span><br><span class="line"><span class="comment"># M file1</span></span><br><span class="line"><span class="comment"># Working copy  (@) : zxoosnnp c2a31a06 (no description set)</span></span><br><span class="line"><span class="comment"># Parent commit (@-): puqltutt f7fb5943 (conflict) B2</span></span><br><span class="line"><span class="comment"># Hint: Conflict in parent commit has been resolved in working copy</span></span><br></pre></td></tr></tbody></table></figure>
+<ol start="5">
+<li><strong>将解决结果合并到冲突提交</strong>：</li>
+</ol>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">jj squash</span><br><span class="line"><span class="comment"># 输出：</span></span><br><span class="line"><span class="comment"># Rebased 1 descendant commits</span></span><br><span class="line"><span class="comment"># Working copy  (@) now at: ntxxqymr e3c279cc (empty) (no description set)</span></span><br><span class="line"><span class="comment"># Parent commit (@-)      : puqltutt 2c7a658e B2</span></span><br><span class="line"><span class="comment"># Existing conflicts were resolved or abandoned from 2 commits.</span></span><br></pre></td></tr></tbody></table></figure>
+<h3 id="冲突解决的关键点">冲突解决的关键点</h3>
+<ul>
+<li>冲突不会阻止rebase完成，Jujutsu会继续重基后续提交</li>
+<li>使用<code>jj new &lt;conflicted_commit&gt;</code>在冲突提交上创建新的工作副本</li>
+<li>解决冲突后使用<code>jj squash</code>将解决方案合并到冲突提交中</li>
+<li>后续提交会自动重基到解决后的提交上</li>
+</ul>
+<h2 id="操作日志和撤销">操作日志和撤销</h2>
+<h3 id="查看操作日志">查看操作日志</h3>
+<p>Jujutsu记录所有对仓库的操作：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">jj op <span class="built_in">log</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 输出示例：</span></span><br><span class="line"><span class="comment"># @  d3b77addea49 martinvonz@vonz.svl.corp.google.com 3 minutes ago, lasted 3 milliseconds</span></span><br><span class="line"><span class="comment"># │  squash commits into f7fb5943a6b9460eb106dba2fac5cac1625c6f7a</span></span><br><span class="line"><span class="comment"># │  args: jj squash</span></span><br><span class="line"><span class="comment"># ○  6fc1873c1180 martinvonz@vonz.svl.corp.google.com 3 minutes ago, lasted 1 milliseconds</span></span><br><span class="line"><span class="comment"># │  snapshot working copy</span></span><br><span class="line"><span class="comment"># │  args: jj st</span></span><br><span class="line"><span class="comment"># ○  ed91f7bcc1fb martinvonz@vonz.svl.corp.google.com 6 minutes ago, lasted 1 milliseconds</span></span><br><span class="line"><span class="comment"># │  new empty commit</span></span><br><span class="line"><span class="comment"># │  args: jj new puqltutt</span></span><br><span class="line"><span class="comment"># ○  367400773f87 martinvonz@vonz.svl.corp.google.com 12 minutes ago, lasted 3 milliseconds</span></span><br><span class="line"><span class="comment"># │  rebase commit daa6ffd5a09a8a7d09a65796194e69b7ed0a566d and descendants</span></span><br><span class="line"><span class="comment"># │  args: jj rebase -s puqltutt -d nuvyytnq</span></span><br></pre></td></tr></tbody></table></figure>
+<h3 id="撤销操作">撤销操作</h3>
+<p>使用<code>jj undo</code>撤销最后一个操作：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">jj undo</span><br><span class="line"></span><br><span class="line"><span class="comment"># 输出：</span></span><br><span class="line"><span class="comment"># Reverted operation: d3b77addea49 (2025-05-12 00:27:27) squash commits into f7fb5943a6b9460eb106dba2fac5cac1625c6f7a</span></span><br><span class="line"><span class="comment"># Working copy  (@) now at: zxoosnnp 63874fe6 (no description set)</span></span><br><span class="line"><span class="comment"># Parent commit (@-)      : puqltutt f7fb5943 (conflict) B2</span></span><br></pre></td></tr></tbody></table></figure>
+<h3 id="恢复到特定操作状态">恢复到特定操作状态</h3>
+<p>查看特定操作时的仓库状态：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看特定操作后的日志（使用实际的操作哈希）</span></span><br><span class="line">jj <span class="built_in">log</span> --at-op=367400773f87</span><br><span class="line"></span><br><span class="line"><span class="comment"># 恢复到特定操作</span></span><br><span class="line">jj op restore &lt;operation_id&gt;</span><br></pre></td></tr></tbody></table></figure>
+<h2 id="内容变更在提交间移动">内容变更在提交间移动</h2>
+<h3 id="交互式Squash">交互式Squash</h3>
+<p>使用<code>jj squash -i</code>选择性地将部分变更移动到父提交：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 创建测试场景</span></span><br><span class="line">jj new master -m abc; <span class="built_in">printf</span> <span class="string">'a\nb\nc\n'</span> &gt; file</span><br><span class="line">jj new -m ABC; <span class="built_in">printf</span> <span class="string">'A\nB\nc\n'</span> &gt; file</span><br><span class="line">jj new -m ABCD; <span class="built_in">printf</span> <span class="string">'A\nB\nC\nD\n'</span> &gt; file</span><br><span class="line"></span><br><span class="line"><span class="comment"># 假设我们想把"C"大写移到ABC提交中</span></span><br><span class="line">jj squash -i  <span class="comment"># 在ABCD提交上运行</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 在diff编辑器中选择要移动的变更（这里选择"C"行的变更）</span></span><br><span class="line"><span class="comment"># 按'c'确认，'q'退出</span></span><br></pre></td></tr></tbody></table></figure>
+<h3 id="DiffEdit">DiffEdit</h3>
+<p>使用<code>jj diffedit</code>直接编辑提交的变更，而不需要检出：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 编辑父提交的变更</span></span><br><span class="line">jj diffedit -r @-</span><br><span class="line"></span><br><span class="line"><span class="comment"># 在diff编辑器中选择要修改的内容</span></span><br><span class="line"><span class="comment"># 修改完成后，后续提交会自动重基</span></span><br></pre></td></tr></tbody></table></figure>
+<h3 id="拆分提交">拆分提交</h3>
+<p>使用<code>jj split</code>将一个大提交拆分成多个：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 假设当前提交有多个不相关的变更</span></span><br><span class="line">jj <span class="built_in">split</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 在diff编辑器中选择要拆分到第一个提交的变更</span></span><br><span class="line"><span class="comment"># 剩余的变更会留在第二个提交中</span></span><br></pre></td></tr></tbody></table></figure>
+<h2 id="日常最佳实践">日常最佳实践</h2>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 1. 基于主干创建功能</span></span><br><span class="line">jj new main -m <span class="string">"wip: add login"</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 2. 开发、迭代</span></span><br><span class="line">vim foo.rust</span><br><span class="line">jj commit -m <span class="string">"parse jwt"</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 3. 需要改更早的提交？直接rebase -i</span></span><br><span class="line">jj rebase -i <span class="string">'main'</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 4. 整理完，推到远端</span></span><br><span class="line">jj git push -c @-</span><br></pre></td></tr></tbody></table></figure>
+<h2 id="高频技巧">高频技巧</h2>
+<ul>
+<li><strong>快速拆分大提交</strong>：<code>jj split</code>（交互式选择文件或hunk拆成两个变更集）</li>
+<li><strong>快速squash</strong>：<code>jj squash -r &lt;child&gt; -r &lt;parent&gt;</code> 或 <code>jj squash --into &lt;parent&gt;</code></li>
+<li><strong>撤销任何操作</strong>：<code>jj op log</code> → 找到误操作的op → <code>jj op restore &lt;id&gt;</code>（时间机器）</li>
+</ul>
+<h2 id="常见坑与排查">常见坑与排查</h2>
+<table>
+<thead>
+<tr>
+<th>现象</th>
+<th>原因</th>
+<th>解决方法</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>无法push</td>
+<td>远端有更新</td>
+<td><code>jj git fetch &amp;&amp; jj rebase -d 'main@origin'</code></td>
+</tr>
+<tr>
+<td>误删变更集</td>
+<td>历史仍在</td>
+<td><code>jj log -r 'visible_heads()'</code> 找回，或 <code>jj op restore</code></td>
+</tr>
+<tr>
+<td>Windows路径过长</td>
+<td>jj内部使用长哈希</td>
+<td>设置 <code>core.longpaths=true</code>（Git配置）</td>
+</tr>
+<tr>
+<td>GUI工具不支持</td>
+<td>只认.git</td>
+<td>使用colocate模式即可</td>
+</tr>
+</tbody>
+</table>
+<h2 id="学习资源">学习资源</h2>
+<ul>
+<li><strong>官方书</strong>：<a target="_blank" rel="noopener" href="https://github.com/martinvonz/jj/blob/main/docs/tutorial.md">https://github.com/martinvonz/jj/blob/main/docs/tutorial.md</a></li>
+<li><strong>实时更新教程</strong>：<a target="_blank" rel="noopener" href="https://steveklabnik.github.io/jujutsu-tutorial/introduction/introduction.html">https://steveklabnik.github.io/jujutsu-tutorial/introduction/introduction.html</a></li>
+<li><strong>命令补全</strong>：在zsh/bash里 <code>source &lt;(jj util completion zsh)</code></li>
+</ul>
+<h2 id="速查清单（贴墙用）">速查清单（贴墙用）</h2>
+<h3 id="基础操作">基础操作</h3>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 克隆仓库</span></span><br><span class="line">jj git <span class="built_in">clone</span> &lt;url&gt;</span><br><span class="line"></span><br><span class="line"><span class="comment"># 新功能</span></span><br><span class="line">jj new main -m <span class="string">"xxx"</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 描述变更</span></span><br><span class="line">jj describe</span><br><span class="line"></span><br><span class="line"><span class="comment"># 迭代</span></span><br><span class="line">jj commit -m <span class="string">"..."</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看状态</span></span><br><span class="line">jj st</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看日志</span></span><br><span class="line">jj <span class="built_in">log</span></span><br><span class="line">jj <span class="built_in">log</span> -r <span class="string">'@ | root() | bookmarks()'</span>  <span class="comment"># 使用revset</span></span><br></pre></td></tr></tbody></table></figure>
+<h3 id="历史重写">历史重写</h3>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 整理历史</span></span><br><span class="line">jj rebase -i <span class="string">'main'</span></span><br><span class="line">jj rebase -s &lt;<span class="built_in">source</span>&gt; -d &lt;destination&gt;</span><br><span class="line"></span><br><span class="line"><span class="comment"># 合并修改</span></span><br><span class="line">jj squash</span><br><span class="line">jj squash -i  <span class="comment"># 交互式</span></span><br><span class="line">jj squash --into &lt;parent&gt;</span><br><span class="line"></span><br><span class="line"><span class="comment"># 拆分提交</span></span><br><span class="line">jj <span class="built_in">split</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 编辑提交变更</span></span><br><span class="line">jj diffedit -r @-</span><br></pre></td></tr></tbody></table></figure>
+<h3 id="冲突解决-2">冲突解决</h3>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 在冲突提交上创建新提交</span></span><br><span class="line">jj new &lt;conflicted_commit&gt;</span><br><span class="line"></span><br><span class="line"><span class="comment"># 解决冲突后合并</span></span><br><span class="line">jj squash</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看冲突</span></span><br><span class="line"><span class="built_in">cat</span> &lt;conflicted_file&gt;</span><br></pre></td></tr></tbody></table></figure>
+<h3 id="撤销和恢复">撤销和恢复</h3>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 撤销最后一个操作</span></span><br><span class="line">jj undo</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看操作日志</span></span><br><span class="line">jj op <span class="built_in">log</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 恢复到特定操作</span></span><br><span class="line">jj op restore &lt;operation_id&gt;</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看特定操作时的状态</span></span><br><span class="line">jj <span class="built_in">log</span> --at-op=&lt;operation_id&gt;</span><br></pre></td></tr></tbody></table></figure>
+<h3 id="远程协作">远程协作</h3>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 拉取</span></span><br><span class="line">jj git fetch</span><br><span class="line">jj git fetch &amp;&amp; jj rebase -d <span class="string">'main@origin'</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 推送</span></span><br><span class="line">jj git push -c @-</span><br><span class="line">jj git push --change &lt;change_id&gt;</span><br><span class="line"></span><br><span class="line"><span class="comment"># 放弃追踪文件</span></span><br><span class="line">jj file untrack &lt;file&gt;</span><br></pre></td></tr></tbody></table></figure>
+<h3 id="Revset表达式">Revset表达式</h3>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">@           <span class="comment"># 当前工作副本</span></span><br><span class="line">@-          <span class="comment"># 工作副本的父提交</span></span><br><span class="line">root()      <span class="comment"># 根提交</span></span><br><span class="line">bookmarks() <span class="comment"># 所有书签</span></span><br><span class="line">foo::bar    <span class="comment"># foo到bar的DAG范围</span></span><br><span class="line">foo..bar    <span class="comment"># foo到bar的范围</span></span><br></pre></td></tr></tbody></table></figure>
+<h2 id="总结">总结</h2>
+<p>Jujutsu通过创新的架构设计解决了Git的许多痛点：</p>
+<ol>
+<li>消除暂存区概念，简化工作流程</li>
+<li>自动重基机制，减少手动操作</li>
+<li>工作区永远干净，避免状态混乱</li>
+<li>强大的撤销和回滚能力</li>
+<li>与Git兼容，平滑迁移</li>
+</ol>
+<p>对于Git资深用户，Jujutsu是"即插即用"的效率工具，特别适合需要频繁修改历史和重整提交的开发工作流。</p>
+</article><section class="jump-container is-flex is-justify-content-space-between my-6"><!-- em is empty placeholder--><em></em><a class="button is-default" href="/2025/08/11/rl-01/" title="强化学习进阶教程"><span class="has-text-weight-semibold">Next: 强化学习进阶教程</span><i class="iconfont icon-next ml-2 has-text-grey"></i></a></section><article class="mt-6 comment-container"><script async repo="Haojen/Claudia-theme-blog" src="https://utteranc.es/client.js" issue-term="pathname" theme="preferred-color-scheme"></script></article></div></div></main></main><footer class="is-flex is-flex-direction-column is-align-items-center is-flex-shrink-0 is-family-serif"><section class="sns-container"><a title="twitter" target="_blank" rel="noopener nofollow" href="//twitter.com//"><i class="iconfont icon-twitter"></i></a><!-- Github--><a title="github" target="_blank" rel="noopener nofollow" href="//github.com/BitTuner-Jack"><i class="iconfont icon-github"></i></a><!-- Ins--><a title="instagram" target="_blank" rel="noopener nofollow" href="//www.instagram.com//"><i class="iconfont icon-ins"></i></a><!-- RSS--><!-- 知乎--><!-- 领英--><!-- 脸书--><a title="facebook" target="_blank" rel="noopener nofollow" href="//www.facebook.com//"><i class="iconfont icon-tian7_facebook"></i></a></section><p><span>Copyright ©</span><span> Jack 2025</span></p><div class="is-flex is-justify-content-center is-flex-wrap-wrap"><p>Powered by Hexo &verbar;&nbsp;</p><p class="is-flex is-justify-content-center"><a title="Hexo theme author" target="_blank" rel="noopener" href="//github.com/haojen">Theme by Haojen&nbsp;</a></p><div style="margin-top: 2px"><a class="github-button" title="github-button" target="_blank" rel="noopener" href="https://github.com/haojen/hexo-theme-Claudia" data-color-scheme="no-preference: light; light: light; dark: dark;" data-show-count="true"></a></div></div><div><span></span></div></footer><script async defer src="https://buttons.github.io/buttons.js"></script><script src="/js/jquery-3.6.1.min.js"></script><script src="/js/jquery-fancybox.min.js"></script><script src="/js/img_zoom.js"></script><script>window.CLAUDIA_CONFIG = window.CLAUDIA_CONFIG || {};
+window.CLAUDIA_CONFIG.mermaid = {
+    enable: true,
+    theme: 'default'
+};</script><script src="/js/mermaid.js"></script><script src="/js/post.js"></script></body></html>

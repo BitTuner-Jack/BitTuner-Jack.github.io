@@ -1,0 +1,588 @@
+<h1>Font Configuration Guide for Claudia Theme</h1>
+<blockquote>
+<p>A comprehensive guide to customizing fonts in Hexo Claudia theme, including setup, troubleshooting, and optimization.</p>
+</blockquote>
+<hr>
+<h2 id="Table-of-Contents">Table of Contents</h2>
+<ol>
+<li><a href="#font-settings-locations">Font Settings Locations</a></li>
+<li><a href="#custom-font-setup">Custom Font Setup</a></li>
+<li><a href="#font-size-configuration">Font Size Configuration</a></li>
+<li><a href="#font-loading-performance">Font Loading Performance</a></li>
+<li><a href="#cdn-integration">CDN Integration</a></li>
+<li><a href="#troubleshooting">Troubleshooting</a></li>
+</ol>
+<hr>
+<h2 id="Font-Settings-Locations">Font Settings Locations</h2>
+<h3 id="1-Global-Font-Family">1. Global Font Family</h3>
+<p><strong>File</strong>: <code>/themes/claudia/source/style/common/bulma.css</code></p>
+<p><strong>Line 347</strong> - Body text font:</p>
+<pre><code class="language-css">body,
+button,
+input,
+optgroup,
+select,
+textarea {
+  font-family: &quot;LXGW WenKai&quot;, BlinkMacSystemFont, -apple-system, &quot;Segoe UI&quot;, 
+               &quot;Roboto&quot;, &quot;Oxygen&quot;, &quot;Ubuntu&quot;, &quot;Cantarell&quot;, &quot;Fira Sans&quot;, 
+               &quot;Droid Sans&quot;, &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, &quot;Arial&quot;, sans-serif;
+}
+</code></pre>
+<h3 id="2-Code-Font-Settings">2. Code Font Settings</h3>
+<p><strong>File</strong>: <code>/themes/claudia/source/style/post.scss</code></p>
+<p><strong>Inline code</strong> (Line 54):</p>
+<pre><code class="language-scss">code {
+  font-family: &quot;Maple Mono&quot;, ui-monospace, SFMono-Regular, Menlo, Monaco, 
+               Consolas, &quot;Liberation Mono&quot;, &quot;Courier New&quot;, monospace;
+  border-radius: 4px;
+  background: var(--third-bg-color);
+}
+</code></pre>
+<p><strong>Code blocks</strong> (Line 60, 132):</p>
+<pre><code class="language-scss">pre {
+  font-family: &quot;Maple Mono&quot;, ui-monospace, SFMono-Regular, Menlo, Monaco, 
+               Consolas, &quot;Liberation Mono&quot;, &quot;Courier New&quot;, monospace;
+}
+
+figure.highlight .code pre {
+  font-family: &quot;Maple Mono&quot;, ui-monospace, SFMono-Regular, Menlo, Monaco, 
+               Consolas, &quot;Liberation Mono&quot;, &quot;Courier New&quot;, monospace;
+  font-size: 15px;
+}
+</code></pre>
+<h3 id="3-Font-Declarations">3. Font Declarations</h3>
+<p><strong>File</strong>: <code>/themes/claudia/source/style/base.scss</code></p>
+<pre><code class="language-scss">// LXGWWenKai from Cloudflare CDN
+@import url(&quot;https://cdnjs.cloudflare.com/ajax/libs/lxgw-wenkai-web/1.520.0/lxgwwenkai-regular/result.min.css&quot;);
+
+// Maple Mono - Local font
+@font-face {
+  font-family: 'Maple Mono';
+  src: url('../fonts/MapleMono-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+</code></pre>
+<hr>
+<h2 id="Custom-Font-Setup">Custom Font Setup</h2>
+<h3 id="Method-1-Using-CDN-Recommended">Method 1: Using CDN (Recommended)</h3>
+<p><strong>Advantages</strong>:</p>
+<ul>
+<li>✅ No local storage needed</li>
+<li>✅ Global CDN acceleration</li>
+<li>✅ Automatic browser caching</li>
+<li>✅ Easy to update</li>
+</ul>
+<p><strong>Implementation</strong>:</p>
+<ol>
+<li><strong>Add CDN import</strong> in <code>base.scss</code>:</li>
+</ol>
+<pre><code class="language-scss">@import url(&quot;https://cdn.example.com/path/to/font.css&quot;);
+</code></pre>
+<ol start="2">
+<li><strong>Update font-family</strong> in <code>bulma.css</code>:</li>
+</ol>
+<pre><code class="language-css">body {
+  font-family: &quot;Your Font Name&quot;, fallback-fonts...;
+}
+</code></pre>
+<h3 id="Method-2-Local-Font-Deployment">Method 2: Local Font Deployment</h3>
+<p><strong>Steps</strong>:</p>
+<ol>
+<li>
+<p><strong>Prepare font files</strong>:</p>
+<ul>
+<li>Download <code>.woff2</code> format (recommended for modern browsers)</li>
+<li>Download <code>.woff</code> format (for older browser compatibility)</li>
+</ul>
+</li>
+<li>
+<p><strong>Place files</strong> in <code>/themes/claudia/source/fonts/</code>:</p>
+</li>
+</ol>
+<pre><code>/fonts/
+├── YourFont-Regular.woff2
+├── YourFont-Bold.woff2
+└── README.md
+</code></pre>
+<ol start="3">
+<li><strong>Declare @font-face</strong> in <code>base.scss</code>:</li>
+</ol>
+<pre><code class="language-scss">@font-face {
+  font-family: 'Your Font';
+  src: url('../fonts/YourFont-Regular.woff2') format('woff2'),
+       url('../fonts/YourFont-Regular.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+</code></pre>
+<ol start="4">
+<li><strong>Apply font</strong> in <code>bulma.css</code>:</li>
+</ol>
+<pre><code class="language-css">body {
+  font-family: &quot;Your Font&quot;, system-ui, sans-serif;
+}
+</code></pre>
+<ol start="5">
+<li><strong>Regenerate site</strong>:</li>
+</ol>
+<pre><code class="language-bash">hexo clean &amp;&amp; hexo generate
+</code></pre>
+<hr>
+<h2 id="Font-Size-Configuration">Font Size Configuration</h2>
+<h3 id="Global-Base-Font-Size">Global Base Font Size</h3>
+<p><strong>File</strong>: <code>/themes/claudia/source/style/common/bulma.css</code></p>
+<p><strong>Line 318</strong> - HTML root font size (affects all <code>rem</code> units):</p>
+<pre><code class="language-css">html {
+  font-size: 19px;  /* Default: 16px, Current: 19px */
+}
+</code></pre>
+<p><strong>Impact</strong>: Changing this value scales all elements using <code>rem</code> units proportionally.</p>
+<h3 id="Specific-Font-Sizes">Specific Font Sizes</h3>
+<table>
+<thead>
+<tr>
+<th>Element</th>
+<th>File</th>
+<th>Line</th>
+<th>Size</th>
+<th>Usage</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Body text</td>
+<td><code>bulma.css</code></td>
+<td>359</td>
+<td><code>1em</code></td>
+<td>Inherits from html</td>
+</tr>
+<tr>
+<td>Code blocks</td>
+<td><code>post.scss</code></td>
+<td>132</td>
+<td><code>15px</code></td>
+<td>Syntax highlighted code</td>
+</tr>
+<tr>
+<td>Code language tag</td>
+<td><code>post.scss</code></td>
+<td>143</td>
+<td><code>12px</code></td>
+<td>Bottom-right language label</td>
+</tr>
+<tr>
+<td>Copy button</td>
+<td><code>post.scss</code></td>
+<td>152</td>
+<td><code>12px</code></td>
+<td>Code copy button</td>
+</tr>
+<tr>
+<td>Post time</td>
+<td><code>widget-post-list.scss</code></td>
+<td>67</td>
+<td><code>14px</code></td>
+<td>Article timestamp</td>
+</tr>
+<tr>
+<td>User name</td>
+<td><code>widget-post-list.scss</code></td>
+<td>145</td>
+<td><code>18px</code></td>
+<td>Profile name</td>
+</tr>
+</tbody>
+</table>
+<h3 id="Title-Sizes">Title Sizes</h3>
+<p><strong>File</strong>: <code>/themes/claudia/source/style/common/bulma.css</code> (Lines 3097-3143)</p>
+<pre><code class="language-css">.title { font-size: 2rem; }      /* Default (32px) */
+.title.is-1 { font-size: 3rem; }    /* H1 (48px) */
+.title.is-2 { font-size: 2.5rem; }  /* H2 (40px) */
+.title.is-3 { font-size: 2rem; }    /* H3 (32px) */
+.title.is-4 { font-size: 1.5rem; }  /* H4 (24px) */
+.title.is-5 { font-size: 1.25rem; } /* H5 (20px) */
+.title.is-6 { font-size: 1rem; }    /* H6 (16px) */
+</code></pre>
+<h3 id="Recommended-Adjustments">Recommended Adjustments</h3>
+<p><strong>For better Chinese font rendering</strong>:</p>
+<pre><code class="language-css">html {
+  font-size: 17px-19px;  /* Optimal range for Chinese fonts */
+}
+</code></pre>
+<p><strong>For code blocks</strong>:</p>
+<pre><code class="language-scss">figure.highlight .code pre {
+  font-size: 14px-16px;  /* Adjust based on preference */
+}
+</code></pre>
+<hr>
+<h2 id="Font-Loading-Performance">Font Loading Performance</h2>
+<h3 id="Common-Issue-FOUT-Flash-of-Unstyled-Text">Common Issue: FOUT (Flash of Unstyled Text)</h3>
+<p><strong>Symptoms</strong>:</p>
+<ul>
+<li>Initial page load shows fallback font</li>
+<li>Long delay before custom font appears</li>
+<li>Text reflows after font loads</li>
+</ul>
+<h3 id="Root-Causes">Root Causes</h3>
+<ol>
+<li>
+<p><strong>Large font file size</strong>:</p>
+<ul>
+<li>Example: LXGW WenKai full version = 5.4MB</li>
+<li>Normal web fonts: 100-500KB</li>
+<li>Download time: 10-30 seconds on slow connections</li>
+</ul>
+</li>
+<li>
+<p><strong>Loading sequence</strong>:</p>
+<ul>
+<li>Fonts load after CSS parsing</li>
+<li>No prioritization</li>
+</ul>
+</li>
+<li>
+<p><strong>No preloading</strong>:</p>
+<ul>
+<li>Browser discovers fonts late in rendering process</li>
+</ul>
+</li>
+</ol>
+<h3 id="Solutions-Implemented">Solutions Implemented</h3>
+<h4 id="1-Font-Preloading">1. Font Preloading</h4>
+<p><strong>File</strong>: <code>/themes/claudia/layout/widget/base.pug</code></p>
+<pre><code class="language-pug">&lt;!-- Font Preloading for better performance --&gt;
+link(rel=&quot;preload&quot; href= url_for('/fonts/MapleMono-Regular.woff2') as=&quot;font&quot; type=&quot;font/woff2&quot; crossorigin)
+&lt;!-- LXGWWenKai is loaded from Cloudflare CDN --&gt;
+</code></pre>
+<p><strong>Effect</strong>: Fonts start downloading before CSS parsing completes, saving 200-500ms.</p>
+<h4 id="2-Optimized-font-display-Strategy">2. Optimized font-display Strategy</h4>
+<p><strong>File</strong>: <code>/themes/claudia/source/style/base.scss</code></p>
+<pre><code class="language-scss">@font-face {
+  font-family: 'Maple Mono';
+  font-display: swap;  /* Small font: show fallback immediately, swap when loaded */
+}
+</code></pre>
+<p><strong>font-display Options</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Strategy</th>
+<th>Behavior</th>
+<th>Best For</th>
+<th>Trade-off</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>auto</code></td>
+<td>Browser default</td>
+<td>-</td>
+<td>❌ Unpredictable</td>
+</tr>
+<tr>
+<td><code>block</code></td>
+<td>3s blank period</td>
+<td>Brand fonts</td>
+<td>❌ Long blank screen</td>
+</tr>
+<tr>
+<td><code>swap</code></td>
+<td>Immediate fallback, permanent swap</td>
+<td>Small fonts</td>
+<td>✅ Always visible</td>
+</tr>
+<tr>
+<td><code>fallback</code></td>
+<td>100ms block, 3s swap window</td>
+<td>Large fonts</td>
+<td>✅ Balanced</td>
+</tr>
+<tr>
+<td><code>optional</code></td>
+<td>100ms window only</td>
+<td>Decorative</td>
+<td>⚠️ May not show</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Current configuration</strong>:</p>
+<ul>
+<li><strong>Maple Mono</strong> (74KB): <code>swap</code> - Always loads, acceptable delay</li>
+<li><strong>LXGW WenKai</strong> (CDN): <code>swap</code> - Fast CDN delivery</li>
+</ul>
+<h4 id="3-Using-CDN-Instead-of-Local-Files">3. Using CDN Instead of Local Files</h4>
+<p><strong>Before</strong> (Local deployment):</p>
+<ul>
+<li>File size: 5.4MB</li>
+<li>Load time: 10-30s</li>
+<li>Server bandwidth: High</li>
+</ul>
+<p><strong>After</strong> (Cloudflare CDN):</p>
+<ul>
+<li>Load time: 1-3s</li>
+<li>Server bandwidth: 0</li>
+<li>Global edge network acceleration</li>
+</ul>
+<hr>
+<h2 id="CDN-Integration">CDN Integration</h2>
+<h3 id="Current-CDN-Setup">Current CDN Setup</h3>
+<p><strong>LXGW WenKai (Chinese Font)</strong></p>
+<pre><code class="language-scss">// In base.scss
+@import url(&quot;https://cdnjs.cloudflare.com/ajax/libs/lxgw-wenkai-web/1.520.0/lxgwwenkai-regular/result.min.css&quot;);
+</code></pre>
+<p><strong>Details</strong>:</p>
+<ul>
+<li><strong>Provider</strong>: Cloudflare CDN</li>
+<li><strong>Version</strong>: v1.520.0 Regular</li>
+<li><strong>Font name</strong>: <code>&quot;LXGW WenKai&quot;</code></li>
+<li><strong>Type</strong>: Chinese handwriting-style font</li>
+</ul>
+<h3 id="Finding-CDN-Resources">Finding CDN Resources</h3>
+<p><strong>Recommended CDN providers</strong>:</p>
+<ol>
+<li><strong>jsDelivr</strong>: <code>https://www.jsdelivr.com/</code></li>
+<li><strong>cdnjs</strong>: <code>https://cdnjs.com/</code></li>
+<li><strong>Google Fonts</strong>: <code>https://fonts.google.com/</code></li>
+<li><strong>Font Awesome</strong>: For icon fonts</li>
+</ol>
+<p><strong>Example search</strong>:</p>
+<pre><code>https://cdnjs.com/libraries/lxgw-wenkai-web
+</code></pre>
+<h3 id="Switching-CDN-URLs">Switching CDN URLs</h3>
+<p>If a CDN link has issues, replace it in <code>base.scss</code>:</p>
+<pre><code class="language-scss">// Old CDN (had issues)
+@import url(&quot;https://cdnjs.cloudflare.com/ajax/libs/lxgw-wenkai-screen-webfont/1.7.0/lxgwwenkaiscreenr.css&quot;);
+
+// New CDN (working)
+@import url(&quot;https://cdnjs.cloudflare.com/ajax/libs/lxgw-wenkai-web/1.520.0/lxgwwenkai-regular/result.min.css&quot;);
+</code></pre>
+<p><strong>Don’t forget to update the font-family name</strong> in <code>bulma.css</code> to match the CDN’s font name.</p>
+<hr>
+<h2 id="Troubleshooting">Troubleshooting</h2>
+<h3 id="Issue-1-Custom-Font-Not-Displaying">Issue 1: Custom Font Not Displaying</h3>
+<p><strong>Diagnosis</strong>:</p>
+<pre><code class="language-javascript">// In browser console
+document.querySelector('body').computedStyleMap().get('font-family')
+</code></pre>
+<p><strong>Solutions</strong>:</p>
+<ol>
+<li>Check font file path is correct</li>
+<li>Verify font-family name matches @font-face declaration</li>
+<li>Clear browser cache: <code>Ctrl+Shift+R</code> (hard refresh)</li>
+<li>Regenerate site: <code>hexo clean &amp;&amp; hexo generate</code></li>
+</ol>
+<h3 id="Issue-2-Font-Loading-Too-Slow">Issue 2: Font Loading Too Slow</h3>
+<p><strong>Check file size</strong>:</p>
+<pre><code class="language-bash">cd themes/claudia/source/fonts
+ls -lh
+</code></pre>
+<p><strong>Solutions</strong>:</p>
+<ol>
+<li>Use CDN instead of local files</li>
+<li>Font subsetting (reduce to common characters only)</li>
+<li>Use <code>font-display: optional</code> for large fonts</li>
+<li>Consider lighter font alternatives</li>
+</ol>
+<h3 id="Issue-3-Font-File-Name-Mismatch">Issue 3: Font File Name Mismatch</h3>
+<p><strong>Example error</strong>:</p>
+<ul>
+<li>Config: <code>MapleMono-Regular.woff2</code></li>
+<li>Actual file: <code>MapleMono-Regular.ttf.woff2</code></li>
+</ul>
+<p><strong>Fix</strong>:</p>
+<pre><code class="language-bash">cd themes/claudia/source/fonts
+mv MapleMono-Regular.ttf.woff2 MapleMono-Regular.woff2
+</code></pre>
+<h3 id="Issue-4-CORS-Error-with-CDN-Fonts">Issue 4: CORS Error with CDN Fonts</h3>
+<p><strong>Error message</strong>: “Access to font blocked by CORS policy”</p>
+<p><strong>Solution</strong>: Add <code>crossorigin</code> attribute to preload:</p>
+<pre><code class="language-pug">link(rel=&quot;preload&quot; href=&quot;font-url&quot; as=&quot;font&quot; type=&quot;font/woff2&quot; crossorigin)
+</code></pre>
+<h3 id="Issue-5-Font-Changes-Not-Taking-Effect">Issue 5: Font Changes Not Taking Effect</h3>
+<p><strong>Checklist</strong>:</p>
+<ol>
+<li>✅ Saved all files</li>
+<li>✅ Ran <code>hexo clean</code></li>
+<li>✅ Ran <code>hexo generate</code></li>
+<li>✅ Hard refresh browser (Ctrl+Shift+R)</li>
+<li>✅ Check browser DevTools for errors</li>
+</ol>
+<hr>
+<h2 id="Performance-Optimization-Tips">Performance Optimization Tips</h2>
+<h3 id="1-Minimize-Font-Variants">1. Minimize Font Variants</h3>
+<p>Only load the weights and styles you actually use:</p>
+<pre><code class="language-scss">// ❌ Don't load everything
+@import url(&quot;font.css?weights=100,200,300,400,500,600,700,800,900&quot;);
+
+// ✅ Load only what's needed
+@import url(&quot;font.css?weights=400,700&quot;);
+</code></pre>
+<h3 id="2-Use-Proper-Font-Format">2. Use Proper Font Format</h3>
+<p><strong>Format priority</strong>:</p>
+<ol>
+<li><code>woff2</code> - Best compression, modern browsers</li>
+<li><code>woff</code> - Good compression, broader support</li>
+<li><code>ttf</code> - No compression, fallback only</li>
+</ol>
+<pre><code class="language-scss">@font-face {
+  font-family: 'MyFont';
+  src: url('font.woff2') format('woff2'),     /* Try first */
+       url('font.woff') format('woff'),       /* Fallback */
+       url('font.ttf') format('truetype');    /* Last resort */
+}
+</code></pre>
+<h3 id="3-System-Font-Stack">3. System Font Stack</h3>
+<p>For optimal performance, consider using system fonts:</p>
+<pre><code class="language-css">body {
+  font-family: -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, 
+               &quot;Roboto&quot;, &quot;Helvetica Neue&quot;, Arial, sans-serif;
+}
+</code></pre>
+<p><strong>Advantages</strong>:</p>
+<ul>
+<li>Zero load time</li>
+<li>Native appearance</li>
+<li>Perfect OS integration</li>
+</ul>
+<h3 id="4-Font-Subsetting">4. Font Subsetting</h3>
+<p>For CJK (Chinese/Japanese/Korean) fonts, subset to common characters:</p>
+<pre><code class="language-bash"># Using pyftsubset
+pip install fonttools brotli
+pyftsubset font.woff2 --unicodes=&quot;U+4E00-9FFF&quot; --output-file=&quot;font-subset.woff2&quot;
+</code></pre>
+<p><strong>Expected size reduction</strong>:</p>
+<ul>
+<li>Full CJK font: 5-15MB</li>
+<li>Subset (3000 common chars): 300-800KB</li>
+<li>Compression: 85-95%</li>
+</ul>
+<hr>
+<h2 id="Configuration-Summary">Configuration Summary</h2>
+<h3 id="Quick-Reference-Table">Quick Reference Table</h3>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Location</th>
+<th>Current Setting</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Body font</strong></td>
+<td><code>bulma.css:347</code></td>
+<td>LXGW WenKai (CDN)</td>
+</tr>
+<tr>
+<td><strong>Code font</strong></td>
+<td><code>post.scss:54,60,132</code></td>
+<td>Maple Mono (local)</td>
+</tr>
+<tr>
+<td><strong>Base font size</strong></td>
+<td><code>bulma.css:318</code></td>
+<td>19px</td>
+</tr>
+<tr>
+<td><strong>Code size</strong></td>
+<td><code>post.scss:132</code></td>
+<td>15px</td>
+</tr>
+<tr>
+<td><strong>Font loading</strong></td>
+<td><code>base.pug:43</code></td>
+<td>Preload enabled</td>
+</tr>
+<tr>
+<td><strong>Font display</strong></td>
+<td><code>base.scss:17</code></td>
+<td>swap</td>
+</tr>
+<tr>
+<td><strong>CDN source</strong></td>
+<td><code>base.scss:9</code></td>
+<td>Cloudflare</td>
+</tr>
+</tbody>
+</table>
+<h3 id="File-Structure">File Structure</h3>
+<pre><code>hexo-blog/
+└── themes/claudia/
+    ├── layout/
+    │   └── widget/
+    │       └── base.pug              # Font preloading
+    └── source/
+        ├── fonts/
+        │   ├── MapleMono-Regular.woff2  # Local fonts
+        │   └── README.md                # Font documentation
+        └── style/
+            ├── base.scss             # Font declarations
+            ├── post.scss             # Code font settings
+            └── common/
+                └── bulma.css         # Global font settings
+</code></pre>
+<hr>
+<h2 id="Version-History">Version History</h2>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Version</th>
+<th>Changes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2025-10-21</td>
+<td>1.2</td>
+<td>Updated LXGW WenKai CDN to v1.520.0 Regular</td>
+</tr>
+<tr>
+<td>2025-10-20</td>
+<td>1.1</td>
+<td>Added font preloading, optimized font-display</td>
+</tr>
+<tr>
+<td>2025-10-20</td>
+<td>1.0</td>
+<td>Initial configuration with Maple Mono + LXGW WenKai</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="Resources">Resources</h2>
+<h3 id="Font-Sources">Font Sources</h3>
+<ul>
+<li><strong>LXGW WenKai</strong>: <a href="https://github.com/lxgw/LxgwWenKai">GitHub</a> | <a href="https://cdnjs.com/libraries/lxgw-wenkai-web">CDN</a></li>
+<li><strong>Maple Mono</strong>: <a href="https://github.com/subframe7536/maple-font">GitHub</a></li>
+<li><strong>Google Fonts</strong>: <a href="https://fonts.google.com/">fonts.google.com</a></li>
+<li><strong>Font Squirrel</strong>: <a href="https://www.fontsquirrel.com/">fontsquirrel.com</a></li>
+</ul>
+<h3 id="Tools">Tools</h3>
+<ul>
+<li><strong>Font subsetting</strong>: <a href="https://github.com/fonttools/fonttools">fonttools</a></li>
+<li><strong>Font converter</strong>: <a href="https://transfonter.org/">transfonter.org</a></li>
+<li><strong>Performance testing</strong>: <a href="https://web.dev/font-best-practices/">web.dev/fonts</a></li>
+</ul>
+<h3 id="Documentation">Documentation</h3>
+<ul>
+<li><strong>Hexo Documentation</strong>: <a href="https://hexo.io/docs/">hexo.io/docs</a></li>
+<li><strong>CSS @font-face</strong>: <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face">MDN Web Docs</a></li>
+<li><strong>font-display</strong>: <a href="https://web.dev/font-display/">web.dev/font-display</a></li>
+</ul>
+<hr>
+<h2 id="Notes">Notes</h2>
+<ul>
+<li>Always test font changes in multiple browsers</li>
+<li>Monitor loading performance with browser DevTools</li>
+<li>Consider mobile data usage when choosing fonts</li>
+<li>Keep fallback fonts for accessibility</li>
+<li>Document any custom modifications for future reference</li>
+</ul>
+<hr>
+<p><strong>Last Updated</strong>: October 21, 2025<br>
+<strong>Maintainer</strong>: Claudia Theme User<br>
+<strong>License</strong>: Same as Hexo Claudia Theme</p>
